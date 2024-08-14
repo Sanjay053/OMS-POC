@@ -1,0 +1,10 @@
+.buy-container{
+    background-color: rgb(149, 224, 195);
+}
+.get-container{
+    background-color: rgba(149, 224, 195, 0.381);
+}
+
+a{
+    text-decoration: none;
+}

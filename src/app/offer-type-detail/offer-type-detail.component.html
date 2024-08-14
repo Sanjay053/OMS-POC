@@ -1,0 +1,18 @@
+<!-- Container for the offer type details section -->
+<div class="container typeDetail my-5 border border-black">
+    <!-- Header for the section, with background and text color styling -->
+    <header class="bg-secondary text-white p-3">Offer Type Details</header>
+    <!-- Form section for selecting the type of offer -->
+    <div class="p-3 d-flex flex-column">
+        <label class="p-2" for="item-Discount">Type</label>
+        <select class="col-4" name="Type" id="item-Discount">
+            <!-- Option for item discount, set as selected by default -->
+            <option value="item-discount" selected>Item Discount</option>
+        </select>
+    </div>
+    <div class="m-4">
+        <!-- Custom component for displaying and managing discounts -->
+        <app-get-discount-component></app-get-discount-component>
+    </div>
+
+</div>

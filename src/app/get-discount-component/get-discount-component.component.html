@@ -1,0 +1,105 @@
+<form [formGroup]="discountForm" (ngSubmit)="onSubmit()">
+  <!-- Form array for managing multiple store group versions -->
+  <div formArrayName="storeGroupVersions">
+    <!-- Loop through each store group version -->
+    <div *ngFor="let storeGroupVersion of storeGroupVersionsControls.controls; let storeIndex = index"
+      [formGroupName]="storeIndex">
+      <div class="my-3">
+        <a href="#" role="button" (click)="copyFromPreviousStoreGroupVersion(storeIndex)"
+          *ngIf="storeIndex > 0"><span><i class="bi bi-copy mx-2"></i></span>copy contents from version above</a>
+      </div>
+      <!-- Container for displaying the "Buy This" and "Get This" sections -->
+      <div class="d-flex flex-row">
+        <div class="buy-container col-6 p-3">
+          <h5>Buy This..</h5>
+        </div>
+        <div class="get-container col-6 p-3">
+          <h5>Get This..</h5>
+        </div>
+      </div>
+      <!-- Form array for managing multiple product group versions within a store group version -->
+      <div formArrayName="productGroupVersions">
+        <!-- Loop through each product group version -->
+        <div
+          *ngFor="let productGroupVersion of getProductGroupVersionsControls(storeIndex).controls; let productGroupIndex = index"
+          [formGroupName]="productGroupIndex">
+          <div class="d-flex flex-row">
+            <!-- Product Section -->
+            <div class="col-6 buy-container p-2">
+              <div formGroupName="productGroup">
+                <div class="row container">
+                  <div class="col-10">
+                    <label for="product">Product</label>
+                    <input class="col-12" type="search" id="product" formControlName="name">
+                  </div>
+                  <div class="col-2">
+                    <label for="uom">UoM</label>
+                    <input class="col-8 border-0" style="background-color: transparent;" readonly formControlName="uom"
+                      type="text">
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Discount Section -->
+            <div class="col-6 get-container p-2">
+              <div formGroupName="discountVersion">
+                <div class="d-flex">
+                  <div class="col-4">
+                    <label for="discountType">Discount</label>
+                    <select id="discountType" formControlName="discountType"
+                      (change)="discountHandler($event, storeIndex, productGroupIndex)">
+                      <!-- Options for different discount types -->
+                      <option *ngFor="let item of discount" [value]="item.value">{{ item.label }}</option>
+                    </select>
+                  </div>
+                  <!-- Amount field, shown only if the discount type is not 'free' -->
+                  <div class="col-2" *ngIf="!isFree(storeIndex, productGroupIndex)">
+                    <label for="amount">Amt</label>
+                    <input class="col-8" type="number" id="amount" formControlName="amount" min="0">
+                  </div>
+                  <!-- 'Up To' field, shown based on the discount type -->
+                  <div class="col-2" *ngIf="showUpTo(storeIndex, productGroupIndex)">
+                    <label for="upTo">Up To</label>
+                    <input type="number" class="col-8" id="upTo" formControlName="upTo">
+                  </div>
+                  <!-- Item Limit field -->
+                  <div class="col-2">
+                    <label for="itemLimit">Item Limit</label>
+                    <input type="number" class="col-8" id="itemLimit" formControlName="itemLimit">
+                  </div>
+                  <!-- 'Per Lb Limit' field, shown based on the discount type -->
+                  <div class="col-2" *ngIf="showPerLbLimit(storeIndex, productGroupIndex)">
+                    <label for="perLbLimit">Per Lb Limit</label>
+                    <input type="number" class="col-8" id="perLbLimit" formControlName="perLbLimit">
+                  </div>
+
+                  <!-- Button to remove a product group version, hidden if there's only one -->
+                  <i class="bi bi-x-circle col-2 mt-4" role="button" tabindex="0"
+                    (click)="removeProductGroupVersion(storeIndex, productGroupIndex)"
+                    [hidden]="getProductGroupVersionsControls(storeIndex).length === 1">
+                  </i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Button to add a new product group version -->
+        <div class="d-flex flex-row justify-content-between">
+          <div class="buy-container col-6"></div>
+          <div class="get-container col-6 d-flex justify-content-end">
+            <a href="#" role="button" class="p-2" (click)="addProductGroupVersion(storeIndex)">Add Product Group
+              <span><i class="bi bi-plus-circle mx-2"></i></span></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Buttons to add a new store group version and to submit the form -->
+  <div class="d-flex flex-row justify-content-between my-3">
+    <a href="#" role="button" (click)="addStoreGroupVersion()">Add Store Group <span><i
+          class="bi bi-plus-circle "></i></span></a>
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </div>
+</form>
